@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"log"
 	"os"
 	//	"path/filepath"
 )
@@ -15,11 +15,14 @@ func main() {
 	//	exPath := filepath.Dir(ex)
 	fmt.Println(path)
 
-	files, err := ioutil.ReadDir(path)
+	file, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		log.Fatal("Failed to open directory: %s", err)
 	}
-	for _, f := range files {
-		fmt.Println(f.Name())
+	defer file.Close()
+
+	list, _ := file.Readdirnames(0)
+	for _, f := range list {
+		fmt.Println(f)
 	}
 }
