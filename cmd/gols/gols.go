@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -17,14 +18,28 @@ func listDirectory(path string) {
 
 	list, _ := file.Readdirnames(0)
 	for _, name := range list {
-		fmt.Println(name)
+		if strings.HasPrefix(name, ".") {
+			continue
+		} else {
+			fmt.Println(name)
+
+		}
 	}
 }
 
 func main() {
 	app := &cli.App{
+		Name:  "gols",
+		Usage: "A fun ls command using go",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "lang",
+				Value: "english",
+				Usage: "language for the greeting",
+			},
+		},
 		Action: func(c *cli.Context) error {
-			if c.Args().Get(1) != "" {
+			if c.Args().Len() > 1 {
 				log.Fatal("Can't be more than 1 argument")
 			} else if c.Args().Get(0) != "" {
 				path := c.Args().Get(0)
