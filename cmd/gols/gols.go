@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func listDirectory(path string) {
+func listFileDirectory(path string, all bool) {
 	//fmt.Println(path)
 	file, err := os.Open(path)
 	if err != nil {
@@ -19,12 +19,13 @@ func listDirectory(path string) {
 
 	list, _ := file.Readdirnames(0)
 	for _, name := range list {
-		if strings.HasPrefix(name, ".") {
+		if all != true && strings.HasPrefix(name, ".") {
 			continue
 		} else {
-			fmt.Println(name)
+			fmt.Printf("%v ", name)
 		}
 	}
+	fmt.Println()
 }
 
 func main() {
@@ -37,17 +38,17 @@ func main() {
 			if c.Args().Len() > 1 {
 				for i := 0; i < c.Args().Len(); i++ {
 					path := c.Args().Get(i)
-					listDirectory(path)
+					listFileDirectory(path, false)
 				}
 			} else if c.Args().Get(0) != "" {
 				path := c.Args().Get(0)
-				listDirectory(path)
+				listFileDirectory(path, false)
 			} else {
 				path, err := os.Getwd()
 				if err != nil {
 					log.Fatal("Failed to get the directory name: %s", err)
 				}
-				listDirectory(path)
+				listFileDirectory(path, false)
 			}
 			return nil
 		},
@@ -57,7 +58,21 @@ func main() {
 				Aliases: []string{"a"},
 				Usage:   "Show all files",
 				Action: func(c *cli.Context) error {
-					fmt.Println("joololo")
+					if c.Args().Len() > 1 {
+						for i := 0; i < c.Args().Len(); i++ {
+							path := c.Args().Get(i)
+							listFileDirectory(path, true)
+						}
+					} else if c.Args().Get(0) != "" {
+						path := c.Args().Get(0)
+						listFileDirectory(path, true)
+					} else {
+						path, err := os.Getwd()
+						if err != nil {
+							log.Fatal("Failed to get the directory name: %s", err)
+						}
+						listFileDirectory(path, true)
+					}
 					return nil
 				},
 			},
