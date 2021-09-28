@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -11,28 +12,19 @@ import (
 )
 
 func listFileDirectory(path string, all bool) {
-	//fmt.Println(path)
-	file, err := os.Open(path)
+	list, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatal("Failed to open directory: %s", err)
 	}
-	defer file.Close()
-
-	list, _ := file.Readdirnames(0)
 	for _, name := range list {
-		if all != true && strings.HasPrefix(name, ".") {
+		if all != true && strings.HasPrefix(name.Name(), ".") {
 			continue
 		} else {
-			dirOrFile, err := os.Stat(name)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if dirOrFile.IsDir() {
-				//	color.Blue("%s ", name)
+			if name.IsDir() {
 				dirColor := color.New(color.FgCyan, color.Bold)
-				dirColor.Printf("%s  ", name)
+				dirColor.Printf("%s  ", name.Name())
 			} else {
-				fmt.Printf("%s  ", name)
+				fmt.Printf("%s  ", name.Name())
 			}
 		}
 	}
