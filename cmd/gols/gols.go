@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,7 +23,17 @@ func listFileDirectory(path string, all bool) {
 		if all != true && strings.HasPrefix(name, ".") {
 			continue
 		} else {
-			fmt.Printf("%v ", name)
+			dirOrFile, err := os.Stat(name)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if dirOrFile.IsDir() {
+				//	color.Blue("%s ", name)
+				dirColor := color.New(color.FgCyan, color.Bold)
+				dirColor.Printf("%s  ", name)
+			} else {
+				fmt.Printf("%s  ", name)
+			}
 		}
 	}
 	fmt.Println()
