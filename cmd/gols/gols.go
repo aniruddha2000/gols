@@ -10,7 +10,10 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func listFileDirectory(path string, all bool) {
+func listFileDirectory(path string, all bool, moreThanOnePath bool) {
+	if moreThanOnePath {
+		fmt.Println(path)
+	}
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatal("Failed to open directory: %s", err)
@@ -26,7 +29,10 @@ func listFileDirectory(path string, all bool) {
 	fmt.Println()
 }
 
-func printPermissions(path string) {
+func printPermissions(path string, moreThanOnePath bool) {
+	if moreThanOnePath {
+		fmt.Println(path)
+	}
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatal("Failed to open directory: %s", err)
@@ -34,9 +40,9 @@ func printPermissions(path string) {
 	for _, name := range list {
 		if name.IsDir() {
 			dirColor := color.New(color.FgCyan, color.Bold)
-			dirColor.Printf("%s %04o %s\n", name.Mode(), name.Mode().Perm(), name.Name())
+			dirColor.Printf("%s   %04o   %s\n", name.Mode(), name.Mode().Perm(), name.Name())
 		} else {
-			fmt.Printf("%s %04o %s\n", name.Mode(), name.Mode().Perm(), name.Name())
+			fmt.Printf("%s   %04o   %s\n", name.Mode(), name.Mode().Perm(), name.Name())
 		}
 	}
 	fmt.Println()
@@ -50,17 +56,17 @@ func main() {
 			if c.Args().Len() > 1 {
 				for i := 0; i < c.Args().Len(); i++ {
 					path := c.Args().Get(i)
-					listFileDirectory(path, false)
+					listFileDirectory(path, false, true)
 				}
-			} else if c.Args().Get(0) != "" {
+			} else if c.Args().Len() == 1 {
 				path := c.Args().Get(0)
-				listFileDirectory(path, false)
+				listFileDirectory(path, false, false)
 			} else {
 				path, err := os.Getwd()
 				if err != nil {
 					log.Fatal("Failed to get the directory name: %s", err)
 				}
-				listFileDirectory(path, false)
+				listFileDirectory(path, false, false)
 			}
 			return nil
 		},
@@ -73,17 +79,17 @@ func main() {
 					if c.Args().Len() > 1 {
 						for i := 0; i < c.Args().Len(); i++ {
 							path := c.Args().Get(i)
-							listFileDirectory(path, true)
+							listFileDirectory(path, true, true)
 						}
-					} else if c.Args().Get(0) != "" {
+					} else if c.Args().Len() == 1 {
 						path := c.Args().Get(0)
-						listFileDirectory(path, true)
+						listFileDirectory(path, true, false)
 					} else {
 						path, err := os.Getwd()
 						if err != nil {
 							log.Fatal("Failed to get the directory name: %s", err)
 						}
-						listFileDirectory(path, true)
+						listFileDirectory(path, true, false)
 					}
 					return nil
 				},
@@ -95,17 +101,17 @@ func main() {
 					if c.Args().Len() > 1 {
 						for i := 0; i < c.Args().Len(); i++ {
 							path := c.Args().Get(i)
-							printPermissions(path)
+							printPermissions(path, true)
 						}
-					} else if c.Args().Get(0) != "" {
+					} else if c.Args().Len() == 1 {
 						path := c.Args().Get(0)
-						printPermissions(path)
+						printPermissions(path, false)
 					} else {
 						path, err := os.Getwd()
 						if err != nil {
 							log.Fatal("Failed to get the directory name: %s", err)
 						}
-						printPermissions(path)
+						printPermissions(path, false)
 					}
 					return nil
 				},
