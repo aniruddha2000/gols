@@ -17,6 +17,7 @@ func listFileDirectory(path string, all bool, moreThanOnePath bool) {
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatalf("Failed to open directory: %s", err)
+		os.Exit(0)
 	}
 	for _, name := range list {
 		if name.IsDir() {
@@ -36,6 +37,7 @@ func printPermissions(path string, moreThanOnePath bool) {
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatalf("Failed to open directory: %s", err)
+		os.Exit(0)
 	}
 	for _, name := range list {
 		if name.IsDir() {
