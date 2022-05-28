@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func listFileDirectory(path string, all bool, moreThanOnePath bool) {
+func listFileDirectory(path string, _, moreThanOnePath bool) {
 	if moreThanOnePath {
 		fmt.Println(path)
 	}
