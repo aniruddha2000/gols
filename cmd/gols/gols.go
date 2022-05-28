@@ -16,7 +16,7 @@ func listFileDirectory(path string, all bool, moreThanOnePath bool) {
 	}
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
-		log.Fatal("Failed to open directory: %s", err)
+		log.Fatalf("Failed to open directory: %s", err)
 	}
 	for _, name := range list {
 		if name.IsDir() {
@@ -35,7 +35,7 @@ func printPermissions(path string, moreThanOnePath bool) {
 	}
 	list, err := ioutil.ReadDir(path)
 	if err != nil {
-		log.Fatal("Failed to open directory: %s", err)
+		log.Fatalf("Failed to open directory: %s", err)
 	}
 	for _, name := range list {
 		if name.IsDir() {
@@ -64,7 +64,7 @@ func main() {
 			} else {
 				path, err := os.Getwd()
 				if err != nil {
-					log.Fatal("Failed to get the directory name: %s", err)
+					log.Fatalf("Failed to get the directory name: %s", err)
 				}
 				listFileDirectory(path, false, false)
 			}
@@ -87,7 +87,7 @@ func main() {
 					} else {
 						path, err := os.Getwd()
 						if err != nil {
-							log.Fatal("Failed to get the directory name: %s", err)
+							log.Fatalf("Failed to get the directory name: %s", err)
 						}
 						listFileDirectory(path, true, false)
 					}
@@ -109,7 +109,7 @@ func main() {
 					} else {
 						path, err := os.Getwd()
 						if err != nil {
-							log.Fatal("Failed to get the directory name: %s", err)
+							log.Fatalf("Failed to get the directory name: %s", err)
 						}
 						printPermissions(path, false)
 					}
